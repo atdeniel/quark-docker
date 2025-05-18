@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  quark:
+    platform: linux/amd64
+    build: .
+    container_name: quark_container
+    privileged: true
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix # Linux/Mac (X11)
+      - ./Quark.jar:/home/quarkuser/Quark.jar
+      # Mount your external drive/shared folder here (adjust the path according to your OS)
+      # Example Linux/Mac:
+      # - /path/to/your/drive:/mnt/external
+      # Example Windows (uncomment and adjust):
+      # - C:/path/to/your/drive:/mnt/external
+      # USB only on Linux:
+      - /dev/bus/usb:/dev/bus/usb
+    devices:
+      # Only work on linux
+      - "/dev/bus/usb"
+    tty: true
+    stdin_open: true
+    working_dir: /home/quarkuser
+    command: java -Dprism.verbose=true -jar Quark.jar      
